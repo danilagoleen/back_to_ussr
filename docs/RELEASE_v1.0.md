@@ -4,7 +4,11 @@
 ### RU
 Первый стабильный релиз `BACK_TO_USSR` для старых Intel Mac на macOS Big Sur 11.x+.
 
-Этот проект появился из реальной проблемы: старый Mac не тянет современные VPN-клиенты, App Store часто недоступен без VPN, а без VPN нельзя получить нормальный интернет. Получается замкнутый круг.
+Этот проект появился из реальной проблемы: друг не был в России 13 лет, приехал со старым MacBook Pro 2015, и попал в замкнутый круг:
+- без VPN нет нормального интернета;
+- без интернета нельзя скачать VPN из App Store.
+
+Плюс большинство клиентов требовали macOS 12+ или были нестабильны на старом железе.
 
 `BACK_TO_USSR` разрывает этот круг: приложение можно передать офлайн (AirDrop/USB), запустить и сразу подключаться по URL-подпискам.
 
@@ -17,6 +21,10 @@
 - авто-реконнект при потере соединения;
 - показ текущего IP и статуса;
 - музыкальные оповещения с mute.
+
+Совместимость:
+- Intel Mac: нативно (`x86_64`);
+- Apple Silicon: через Rosetta 2.
 
 Установка:
 1. Скачайте `BACK_TO_USSR.app.zip` из релиза.
@@ -32,7 +40,9 @@
 ### EN
 First stable release of `BACK_TO_USSR` for old Intel Macs on macOS Big Sur 11.x+.
 
-This project came from a real-world issue: older Macs often cannot run modern VPN clients, App Store access may be blocked without VPN, and without VPN you cannot restore open internet. A classic lockout loop.
+This project came from a real-world issue: an old 2015 MacBook Pro, modern VPN clients requiring newer macOS/App Store, and a lockout loop:
+- no VPN -> limited internet;
+- limited internet -> no VPN install.
 
 `BACK_TO_USSR` breaks that loop: you can transfer the app offline (AirDrop/USB), launch it, and connect using subscription URLs.
 
@@ -45,6 +55,10 @@ Highlights:
 - auto-reconnect on connection loss;
 - status and current IP in menu;
 - optional anthem notifications with mute.
+
+Compatibility:
+- Intel Mac: native (`x86_64`);
+- Apple Silicon: via Rosetta 2.
 
 Install:
 1. Download `BACK_TO_USSR.app.zip` from this release.

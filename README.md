@@ -2,37 +2,46 @@
 ## Universal Secure Server Router
 [![Download v1.0](https://img.shields.io/badge/Download-v1.0-2ea44f?style=for-the-badge&logo=github)](https://github.com/danilagoleen/back_to_ussr/releases/tag/v1.0)
 
-Lightweight menu-bar VPN client for old Intel Macs (macOS Big Sur 11.x+).
+Лёгкий menu-bar VPN-клиент для старых Mac (Intel, macOS Big Sur 11.x+).
 
-It solves the lockout loop:
-- no open internet -> cannot install VPN from App Store
-- no VPN -> cannot get open internet
+Решает замкнутый круг:
+- без VPN не открыть интернет;
+- без интернета не скачать VPN из App Store.
 
-`BACK_TO_USSR` is built to be transferred offline (AirDrop/USB), launched, and used immediately.
+`BACK_TO_USSR` можно передать офлайн (AirDrop/USB), запустить и сразу использовать.
 
-## Why This Project Exists
-- Real-world case: old MacBook Pro 2015 (Intel, Big Sur 11.7.10)
-- Many modern clients require newer macOS or App Store
-- Existing tools were unstable in blocked networks
+## Origin Story
+Идея родилась из реальной ситуации: друг не был в России 13 лет, приехал со старым MacBook Pro 2015 (Intel, Big Sur 11.7.10), а большинство современных VPN-клиентов:
+- требовали macOS 12+;
+- требовали App Store;
+- или были слишком сложными и нестабильными.
 
-This project provides a simple path: add subscription URL(s), refresh, connect, and recover access.
+Итог был один: ошибки, неработающие клиенты, нулевая диагностика.
+Поэтому и появился `BACK_TO_USSR` как простой “народный клиент”: добавить URL, обновить сервера, подключиться.
 
-## Features
-- Menu-bar app near macOS clock (`★ USSR`)
-- Multiple subscription URLs (unlimited, one per line)
-- Refresh from all URLs + merge + deduplicate nodes
-- Server picker by country/name
-- Auto-dial fallback:
-  - selected server -> last successful -> full pool
-  - tries `flow on -> flow off`
-- Auto-reconnect monitor
-- System SOCKS on/off with admin prompt
-- Current external IP check in app menu
-- Optional anthem notifications:
-  - random track selection
-  - anti-repeat
-  - cooldown by timestamp
-  - mute toggle
+## Что умеет
+- menu-bar приложение (иконка рядом с часами `★ USSR`);
+- несколько subscription URL одновременно (без ограничений);
+- объединение серверов из всех URL + удаление дублей;
+- ручной выбор сервера/страны;
+- автодозвон:
+  - выбранный сервер -> последний успешный -> весь пул;
+  - fallback `flow on -> flow off`;
+- авто-переподключение при потере связи;
+- включение/выключение системного SOCKS c правами администратора;
+- показ текущего IP и статуса в меню;
+- музыкальные оповещения (случайный трек, anti-repeat, cooldown, mute).
+
+## Для кого
+- для тех, кто давно не был в РФ и приехал со старым Mac;
+- для семей со старыми компьютерами;
+- для пользователей, которым нужен рабочий инструмент “включил и пользуйся”.
+
+## Compatibility
+- Intel Mac: работает нативно (`x86_64`).
+- Apple Silicon (M1/M2/M3/M4): запускается через Rosetta 2.
+- Текущая сборка ориентирована на максимальную совместимость (macOS 11+).
+- План: выпуск universal-сборки (`x86_64 + arm64`) в следующих релизах.
 
 ## Screenshot
 ![Toolbar menu](docs/media/toolbar-menu.png)
@@ -75,6 +84,10 @@ SUBSCRIPTION_URLS="https://example.com/sub1,https://example.com/sub2" ./scripts/
 - runtime config generation from parsed VLESS nodes
 - SOCKS validation with `curl`
 - periodic monitor for reconnect logic
+
+## English (short)
+`BACK_TO_USSR` is a lightweight menu-bar VPN client for old Macs.
+It was built from a real lockout case (no internet -> no VPN install -> no internet), supports multi-URL VLESS subscriptions, autodial, reconnect, and easy offline transfer.
 
 ## License
 MIT. See [LICENSE](LICENSE).
