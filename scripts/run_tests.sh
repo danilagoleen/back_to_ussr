@@ -8,7 +8,11 @@ echo "[1/3] Unit tests"
 python3 tests/run_unit_tests.py
 
 echo "[2/3] Live subscription check"
-python3 scripts/live_subscription_check.py
+if [[ -n "${SUBSCRIPTION_URLS:-}" ]]; then
+  python3 scripts/live_subscription_check.py
+else
+  echo "Skip live check (set SUBSCRIPTION_URLS to enable)"
+fi
 
 echo "[3/3] Build smoke"
 APP="$ROOT/dist/BACK_TO_USSR.app"

@@ -85,7 +85,7 @@ final class VPNApp: NSObject, NSApplicationDelegate {
     private let anthemCooldownSeconds: Double = 180
 
     private var state = AppState(
-        subscriptionURLs: ["https://proxyliberty.ru/connection/test_proxies_subs/48bb9885-5a2a-4129-9347-3e946e7ca5b9"],
+        subscriptionURLs: [],
         nodes: [],
         selectedIndex: nil,
         lastSuccessIndex: nil,
@@ -135,9 +135,6 @@ final class VPNApp: NSObject, NSApplicationDelegate {
         if let loaded = try? JSONDecoder().decode(AppState.self, from: data) {
             state = loaded
             state.subscriptionURLs = state.subscriptionURLs.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }
-            if state.subscriptionURLs.isEmpty {
-                state.subscriptionURLs = ["https://proxyliberty.ru/connection/test_proxies_subs/48bb9885-5a2a-4129-9347-3e946e7ca5b9"]
-            }
         }
     }
 

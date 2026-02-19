@@ -1,4 +1,5 @@
 # BACK_TO_USSR
+## Universal Secure Server Router
 
 Menu-bar VPN app for Intel macOS 11+.
 

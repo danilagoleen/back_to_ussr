@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 import base64
+import os
 import sys
 import urllib.request
 
-URLS = [
-    "https://proxyliberty.ru/connection/subs/48bb9885-5a2a-4129-9347-3e946e7ca5b9",
-    "https://proxyliberty.ru/connection/tunnel/48bb9885-5a2a-4129-9347-3e946e7ca5b9",
-    "https://proxyliberty.ru/connection/test_proxies_subs/48bb9885-5a2a-4129-9347-3e946e7ca5b9",
+DEFAULT_URLS = [
+    "https://example.com/subscription-1",
+    "https://example.com/subscription-2",
 ]
 
 
@@ -35,8 +35,20 @@ def fetch(url: str) -> str:
 
 
 def main() -> int:
+    # Priority:
+    # 1) CLI args: python live_subscription_check.py <url1> <url2> ...
+    # 2) SUBSCRIPTION_URLS env var (newline/comma separated)
+    # 3) Safe placeholders (will normally fail and remind user to pass real URLs)
+    urls = sys.argv[1:]
+    if not urls:
+        env_urls = os.getenv("SUBSCRIPTION_URLS", "").strip()
+        if env_urls:
+            urls = [x.strip() for x in env_urls.replace("\n", ",").split(",") if x.strip()]
+    if not urls:
+        urls = DEFAULT_URLS
+
     ok = 0
-    for url in URLS:
+    for url in urls:
         try:
             payload = fetch(url)
             nodes = decode_payload(payload)
@@ -45,6 +57,9 @@ def main() -> int:
                 ok += 1
         except Exception as e:
             print(f"{url} -> ERROR: {e}")
+
+    if urls == DEFAULT_URLS:
+        print("INFO: pass real URLs via args or SUBSCRIPTION_URLS env var")
 
     return 0 if ok > 0 else 2
 

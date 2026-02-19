@@ -1,4 +1,5 @@
 # BACK_TO_USSR
+## Universal Secure Server Router
 
 Lightweight menu-bar VPN client for old Intel Macs (macOS 11 Big Sur+), built to break the classic lockout loop:
 
