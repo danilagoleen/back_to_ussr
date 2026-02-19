@@ -70,6 +70,8 @@ struct AppState: Codable {
 }
 
 final class VPNApp: NSObject, NSApplicationDelegate {
+    private let appTitle = "BACK_TO_USSR"
+    private let appSlogan = "Universal Secure Server Router"
     private let socksPort = 12334
     private var statusItem: NSStatusItem!
     private var menu: NSMenu!
@@ -147,6 +149,16 @@ final class VPNApp: NSObject, NSApplicationDelegate {
 
     private func buildMenu() {
         menu.removeAllItems()
+
+        let titleItem = NSMenuItem(title: appTitle, action: nil, keyEquivalent: "")
+        titleItem.isEnabled = false
+        menu.addItem(titleItem)
+
+        let sloganItem = NSMenuItem(title: appSlogan, action: nil, keyEquivalent: "")
+        sloganItem.isEnabled = false
+        menu.addItem(sloganItem)
+
+        menu.addItem(NSMenuItem.separator())
 
         menu.addItem(makeActionItem("Connect", #selector(connectTapped)))
         menu.addItem(makeActionItem("Disconnect", #selector(disconnectTapped)))
@@ -275,8 +287,8 @@ final class VPNApp: NSObject, NSApplicationDelegate {
 
     @objc private func manageSubscriptionTapped() {
         let alert = NSAlert()
-        alert.messageText = "Subscription URLs"
-        alert.informativeText = "One URL per line. You can add unlimited links."
+        alert.messageText = appTitle
+        alert.informativeText = "\(appSlogan)\n\nOne URL per line. You can add unlimited links."
         if let heroPath = Bundle.main.path(forResource: "subscription_hero", ofType: "png"),
            let hero = NSImage(contentsOfFile: heroPath),
            let scaled = resizedImage(hero, to: NSSize(width: 96, height: 96)) {
@@ -727,7 +739,7 @@ final class VPNApp: NSObject, NSApplicationDelegate {
 
     private func showInfo(_ title: String, _ text: String) {
         let alert = NSAlert()
-        alert.messageText = title
+        alert.messageText = "\(appTitle) — \(title)"
         alert.informativeText = text
         if let icon = appStarIcon(size: 72) {
             alert.icon = icon
