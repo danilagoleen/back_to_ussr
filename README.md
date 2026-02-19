@@ -71,6 +71,9 @@
    ```
 5. Launch app -> `Manage Subscription URLs` -> add URL(s) -> `Refresh Servers` -> `Connect`
 
+Provider guide (Liberty VPN, VLESS on macOS):
+- [https://teletype.in/@vpnliberty/Vless-macOS](https://teletype.in/@vpnliberty/Vless-macOS)
+
 ## Build
 ```bash
 ./build_back_to_ussr_app.command

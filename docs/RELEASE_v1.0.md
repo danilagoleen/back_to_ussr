@@ -40,6 +40,9 @@
    ```
 4. Откройте приложение -> `Manage Subscription URLs` -> вставьте URL -> `Refresh Servers` -> `Connect`.
 
+Инструкция Liberty VPN (VLESS, macOS):
+- [https://teletype.in/@vpnliberty/Vless-macOS](https://teletype.in/@vpnliberty/Vless-macOS)
+
 ---
 
 ### EN
@@ -78,3 +81,6 @@ Install:
    xattr -cr /Applications/BACK_TO_USSR.app
    ```
 4. Open app -> `Manage Subscription URLs` -> paste URL(s) -> `Refresh Servers` -> `Connect`.
+
+Liberty VPN guide (VLESS on macOS):
+- [https://teletype.in/@vpnliberty/Vless-macOS](https://teletype.in/@vpnliberty/Vless-macOS)
