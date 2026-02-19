@@ -114,7 +114,18 @@ final class VPNApp: NSObject, NSApplicationDelegate {
         }
 
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem.button?.title = "★ USSR"
+        if let btn = statusItem.button {
+            btn.title = ""
+            if #available(macOS 11.0, *) {
+                let cfg = NSImage.SymbolConfiguration(pointSize: 13, weight: .bold)
+                let img = NSImage(systemSymbolName: "star.fill", accessibilityDescription: "USSR")?.withSymbolConfiguration(cfg)
+                img?.isTemplate = true
+                btn.image = img
+            } else {
+                btn.title = "★"
+            }
+            btn.toolTip = "BACK_TO_USSR"
+        }
 
         menu = NSMenu()
         buildMenu()
@@ -200,6 +211,10 @@ final class VPNApp: NSObject, NSApplicationDelegate {
 
         menu.addItem(NSMenuItem.separator())
         menu.addItem(makeActionItem("Quit", #selector(quitTapped), key: "q"))
+
+        menu.item(withTitle: "Connect")?.tag = 1001
+        menu.item(withTitle: "Disconnect")?.tag = 1002
+        setConnectedCheck(false)
     }
 
     private func makeActionItem(_ title: String, _ action: Selector, key: String = "") -> NSMenuItem {
@@ -250,6 +265,11 @@ final class VPNApp: NSObject, NSApplicationDelegate {
         menu.item(withTag: 9002)?.title = "Current IP: \(text)"
     }
 
+    private func setConnectedCheck(_ connected: Bool) {
+        menu.item(withTag: 1001)?.state = connected ? .on : .off
+        menu.item(withTag: 1002)?.state = connected ? .off : .off
+    }
+
     @objc private func toggleAutoReconnect() {
         state.autoReconnect.toggle()
         menu.item(withTag: 9101)?.state = state.autoReconnect ? .on : .off
@@ -271,6 +291,7 @@ final class VPNApp: NSObject, NSApplicationDelegate {
             showInfo("No servers", "Refresh servers first.")
             return
         }
+        setConnectedCheck(false)
         autoConnect(reason: "manual")
     }
 
@@ -280,6 +301,7 @@ final class VPNApp: NSObject, NSApplicationDelegate {
         _ = runAdminProxy(enable: false)
         setStatus("Disconnected")
         setIP("-")
+        setConnectedCheck(false)
     }
 
     @objc private func manageSubscriptionTapped() {
@@ -548,6 +570,7 @@ final class VPNApp: NSObject, NSApplicationDelegate {
                             self.setStatus("Connected: \(node.name)")
                             self.setIP(ip)
                             self.isBusy = false
+                            self.setConnectedCheck(true)
                         }
                         return
                     } catch {
@@ -561,6 +584,7 @@ final class VPNApp: NSObject, NSApplicationDelegate {
                 self.setIP("-")
                 self.showInfo("Connection failed", "No working server reached")
                 self.isBusy = false
+                self.setConnectedCheck(false)
             }
         }
     }
@@ -644,8 +668,24 @@ final class VPNApp: NSObject, NSApplicationDelegate {
     }
 
     private func runAdminProxy(enable: Bool) -> Bool {
-        let stateArg = enable ? "on" : "off"
-        let shell = "/usr/sbin/networksetup -setsocksfirewallproxy \"Wi-Fi\" 127.0.0.1 \(socksPort) ; /usr/sbin/networksetup -setsocksfirewallproxystate \"Wi-Fi\" \(stateArg)"
+        let service = activeNetworkServiceName() ?? "Wi-Fi"
+        let shell: String
+        if enable {
+            shell = """
+            /usr/sbin/networksetup -setwebproxy "\(service)" 127.0.0.1 \(socksPort) off;
+            /usr/sbin/networksetup -setsecurewebproxy "\(service)" 127.0.0.1 \(socksPort) off;
+            /usr/sbin/networksetup -setsocksfirewallproxy "\(service)" 127.0.0.1 \(socksPort);
+            /usr/sbin/networksetup -setwebproxystate "\(service)" on;
+            /usr/sbin/networksetup -setsecurewebproxystate "\(service)" on;
+            /usr/sbin/networksetup -setsocksfirewallproxystate "\(service)" on
+            """
+        } else {
+            shell = """
+            /usr/sbin/networksetup -setwebproxystate "\(service)" off;
+            /usr/sbin/networksetup -setsecurewebproxystate "\(service)" off;
+            /usr/sbin/networksetup -setsocksfirewallproxystate "\(service)" off
+            """
+        }
         let escaped = shell
             .replacingOccurrences(of: "\\", with: "\\\\")
             .replacingOccurrences(of: "\"", with: "\\\"")
@@ -661,6 +701,50 @@ final class VPNApp: NSObject, NSApplicationDelegate {
         } catch {
             return false
         }
+    }
+
+    private func activeNetworkServiceName() -> String? {
+        guard let iface = defaultRouteInterface() else { return nil }
+        let p = Process()
+        p.executableURL = URL(fileURLWithPath: "/usr/sbin/networksetup")
+        p.arguments = ["-listnetworkserviceorder"]
+        let out = Pipe()
+        p.standardOutput = out
+        p.standardError = Pipe()
+        do {
+            try p.run()
+            p.waitUntilExit()
+            let text = String(data: out.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
+            let lines = text.split(separator: "\n").map(String.init)
+            for (i, line) in lines.enumerated() where line.contains("Device: \(iface)") && i > 0 {
+                let prev = lines[i - 1]
+                if let close = prev.firstIndex(of: ")") {
+                    return prev[prev.index(after: close)...].trimmingCharacters(in: .whitespacesAndNewlines)
+                }
+            }
+        } catch {}
+        return nil
+    }
+
+    private func defaultRouteInterface() -> String? {
+        let p = Process()
+        p.executableURL = URL(fileURLWithPath: "/usr/sbin/route")
+        p.arguments = ["-n", "get", "default"]
+        let out = Pipe()
+        p.standardOutput = out
+        p.standardError = Pipe()
+        do {
+            try p.run()
+            p.waitUntilExit()
+            let text = String(data: out.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
+            for raw in text.split(separator: "\n") {
+                let line = raw.trimmingCharacters(in: .whitespaces)
+                if line.hasPrefix("interface:") {
+                    return line.replacingOccurrences(of: "interface:", with: "").trimmingCharacters(in: .whitespaces)
+                }
+            }
+        } catch {}
+        return nil
     }
 
     private func playAnthemIfExists() {
@@ -727,6 +811,7 @@ final class VPNApp: NSObject, NSApplicationDelegate {
             } catch {
                 DispatchQueue.main.async {
                     self.setStatus("Connection lost -> reconnecting")
+                    self.setConnectedCheck(false)
                 }
                 self.stopSingBox()
                 self.autoConnect(reason: "monitor")
