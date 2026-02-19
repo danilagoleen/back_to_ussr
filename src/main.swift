@@ -362,7 +362,12 @@ final class VPNApp: NSObject, NSApplicationDelegate {
             } catch {
                 DispatchQueue.main.async {
                     self.setStatus("Refresh failed")
-                    self.showInfo("Refresh failed", error.localizedDescription)
+                    // If we already have cached nodes, keep app usable and avoid a hard-stop UX.
+                    if self.state.nodes.isEmpty {
+                        self.showInfo("Refresh failed", error.localizedDescription)
+                    } else {
+                        self.setStatus("Refresh failed (using cached \(self.state.nodes.count) servers)")
+                    }
                     self.isBusy = false
                 }
             }
@@ -438,10 +443,37 @@ final class VPNApp: NSObject, NSApplicationDelegate {
         _ = sem.wait(timeout: .now() + 25)
 
         if let err = outErr {
+            if let fallback = try? fetchURLViaCurl(urlString), !fallback.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                return fallback
+            }
             throw err
         }
         let text = String(data: outData ?? Data(), encoding: .utf8) ?? ""
+        if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+           let fallback = try? fetchURLViaCurl(urlString),
+           !fallback.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return fallback
+        }
         return text
+    }
+
+    private func fetchURLViaCurl(_ urlString: String) throws -> String {
+        let p = Process()
+        p.executableURL = URL(fileURLWithPath: "/usr/bin/curl")
+        p.arguments = ["-L", "-sS", "--max-time", "25", "-A", "BACK_TO_USSR/1.0", urlString]
+        let out = Pipe()
+        let err = Pipe()
+        p.standardOutput = out
+        p.standardError = err
+        try p.run()
+        p.waitUntilExit()
+
+        let stdout = String(data: out.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
+        if p.terminationStatus == 0 && !stdout.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return stdout
+        }
+        let stderr = String(data: err.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? "curl failed"
+        throw NSError(domain: "curl", code: Int(p.terminationStatus), userInfo: [NSLocalizedDescriptionKey: stderr])
     }
 
     private func decodeSubscription(_ text: String) -> [String] {
