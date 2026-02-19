@@ -26,6 +26,11 @@
 - Intel Mac: нативно (`x86_64`);
 - Apple Silicon: через Rosetta 2.
 
+Совместимость подписок:
+- Протестировано на Liberty VPN (`VLESS + Reality`);
+- Ожидаемо работает с совместимыми `vless://` подписками (plain/base64/urlsafe-base64);
+- Для `vmess://`, `trojan://`, `ss://` и нестандартных форматов совместимость не гарантируется.
+
 Установка:
 1. Скачайте `BACK_TO_USSR.app.zip` из релиза.
 2. Переместите `BACK_TO_USSR.app` в `/Applications`.
@@ -59,6 +64,11 @@ Highlights:
 Compatibility:
 - Intel Mac: native (`x86_64`);
 - Apple Silicon: via Rosetta 2.
+
+Subscription compatibility:
+- Tested with Liberty VPN (`VLESS + Reality`);
+- Expected to work with compatible `vless://` subscriptions (plain/base64/urlsafe-base64);
+- `vmess://`, `trojan://`, `ss://`, and custom provider formats are not guaranteed out of the box.
 
 Install:
 1. Download `BACK_TO_USSR.app.zip` from this release.
