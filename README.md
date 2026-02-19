@@ -1,6 +1,6 @@
 # BACK_TO_USSR
 ## Universal Secure Server Router
-[![Download v1.0](https://img.shields.io/badge/Download-v1.0-2ea44f?style=for-the-badge&logo=github)](https://github.com/danilagoleen/back_to_ussr/releases/tag/v1.0)
+[![Download v1.0.1](https://img.shields.io/badge/Download-v1.0.1-2ea44f?style=for-the-badge&logo=github)](https://github.com/danilagoleen/back_to_ussr/releases/tag/v1.0.1)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![macOS](https://img.shields.io/badge/macOS-11%2B-lightgrey)](https://github.com/danilagoleen/back_to_ussr)
 
