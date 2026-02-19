@@ -1,81 +1,53 @@
 # BACK_TO_USSR
 ## Universal Secure Server Router
 
-Lightweight menu-bar VPN client for old Intel Macs (macOS 11 Big Sur+), built to break the classic lockout loop:
+Lightweight menu-bar VPN client for old Intel Macs (macOS Big Sur 11.x+).
 
+It solves the lockout loop:
 - no open internet -> cannot install VPN from App Store
 - no VPN -> cannot get open internet
 
-`BACK_TO_USSR` is a practical offline-transferable client: build once, AirDrop, run.
+`BACK_TO_USSR` is built to be transferred offline (AirDrop/USB), launched, and used immediately.
 
-## Origin Story
-The project started from a real case:
-- friend returned to Russia after 13 years;
-- old MacBook Pro 2015 (Intel, Big Sur 11.7.10);
-- modern VPN apps were either App Store-only, too new for old macOS, or unreliable in blocked networks.
+## Why This Project Exists
+- Real-world case: old MacBook Pro 2015 (Intel, Big Sur 11.7.10)
+- Many modern clients require newer macOS or App Store
+- Existing tools were unstable in blocked networks
 
-After many failed installs and broken clients, we built our own simple app that actually works on old hardware and blocked networks.
+This project provides a simple path: add subscription URL(s), refresh, connect, and recover access.
 
-## Who It Is For
-- users on old Macs (especially Intel Big Sur)
-- people who cannot install from App Store in restricted networks
-- families with non-technical users (parents / grandparents)
-- users of URL-based subscription services (e.g. Liberty VPN style VLESS subscriptions)
-
-## Key Features
-- Menu-bar app (icon near macOS clock)
+## Features
+- Menu-bar app near macOS clock (`★ USSR`)
 - Multiple subscription URLs (unlimited, one per line)
 - Refresh from all URLs + merge + deduplicate nodes
-- Server picker with country labels
-- Auto-dial/fallback:
-  - selected server first
-  - then last successful
-  - then full pool
+- Server picker by country/name
+- Auto-dial fallback:
+  - selected server -> last successful -> full pool
   - tries `flow on -> flow off`
-- Auto-reconnect monitor (periodic health checks)
-- System SOCKS enable/disable via admin prompt
-- In-app status + current external IP
-- Meme-grade notification audio:
-  - bundled mp3 playlist
+- Auto-reconnect monitor
+- System SOCKS on/off with admin prompt
+- Current external IP check in app menu
+- Optional anthem notifications:
   - random track selection
-  - anti-repeat (no same track twice in a row)
+  - anti-repeat
   - cooldown by timestamp
   - mute toggle
 
-## Why This Is Different
-- Works on old Intel macOS 11 where many modern clients fail
-- No App Store dependency for initial installation
-- Built-in retry/autodial behavior focused on unstable/blocked routes
-- Notification audio and playful UX while still staying practical
+## Screenshot
+![Toolbar menu](docs/media/toolbar-menu.png)
 
-## Architecture (Short)
-- `Swift + AppKit` menu-bar application (`LSUIElement`)
-- bundled `sing-box` binary (`x86_64`) inside app resources
-- runtime config generation from parsed VLESS nodes
-- parser pipeline:
-  - fetch URL
-  - decode plain/base64/urlsafe subscription payloads
-  - parse `vless://` lines
-  - deduplicate nodes
-- connection pipeline:
-  - spawn sing-box
-  - test via SOCKS (`curl`)
-  - set system SOCKS proxy
-- monitor pipeline:
-  - periodic health check
-  - reconnect if lost and auto-reconnect enabled
+## Demo
+- [Video demo](docs/media/demo.mp4)
 
-## Media
-Toolbar/menu:
-
-![BACK_TO_USSR toolbar menu](docs/media/toolbar-menu.png)
-
-Brand image:
-
-![BACK_TO_USSR logo](docs/media/logo-hero.png)
-
-Demo video:
-- [Watch demo](docs/media/demo.mp4)
+## Install
+1. Open [Releases](https://github.com/danilagoleen/back_to_ussr/releases)
+2. Download `BACK_TO_USSR.app.zip`
+3. Move `BACK_TO_USSR.app` to `/Applications`
+4. If macOS blocks launch:
+   ```bash
+   xattr -cr /Applications/BACK_TO_USSR.app
+   ```
+5. Launch app -> `Manage Subscription URLs` -> add URL(s) -> `Refresh Servers` -> `Connect`
 
 ## Build
 ```bash
@@ -91,10 +63,17 @@ Output:
 ./scripts/run_tests.sh
 ```
 
-Includes:
-- parser/decode unit checks
-- live subscription checks
-- build smoke checks
+Live subscription check can be enabled with:
+```bash
+SUBSCRIPTION_URLS="https://example.com/sub1,https://example.com/sub2" ./scripts/run_tests.sh
+```
 
-## Legal Note
-Use only where legal and for legitimate access and communication needs.
+## Architecture (Short)
+- `Swift + AppKit` menu-bar app (`LSUIElement`)
+- bundled `sing-box` (`x86_64`) inside app resources
+- runtime config generation from parsed VLESS nodes
+- SOCKS validation with `curl`
+- periodic monitor for reconnect logic
+
+## License
+MIT. See [LICENSE](LICENSE).
