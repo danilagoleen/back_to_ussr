@@ -13,6 +13,13 @@ Menu-bar VPN app for Intel macOS 11+.
 - Auto-reconnect monitor every 30s
 - Optional anthem on successful connect
 
+## Media
+![Toolbar menu](media/toolbar-menu.png)
+
+![Brand image](media/logo-hero.png)
+
+[Demo video](media/demo.mp4)
+
 ## Build
 ```bash
 /Users/danilagulin/Documents/VETKA_Project/vetka_live_03/tools/back_to_ussr_app/build_back_to_ussr_app.command

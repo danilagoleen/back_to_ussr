@@ -65,6 +65,18 @@ After many failed installs and broken clients, we built our own simple app that 
   - periodic health check
   - reconnect if lost and auto-reconnect enabled
 
+## Media
+Toolbar/menu:
+
+![BACK_TO_USSR toolbar menu](docs/media/toolbar-menu.png)
+
+Brand image:
+
+![BACK_TO_USSR logo](docs/media/logo-hero.png)
+
+Demo video:
+- [Watch demo](docs/media/demo.mp4)
+
 ## Build
 ```bash
 ./build_back_to_ussr_app.command
