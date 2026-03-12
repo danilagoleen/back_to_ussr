@@ -2,7 +2,7 @@
 
 ## Components
 - `src/main.swift`: AppKit menu-bar app + orchestration
-- `build_back_to_ussr_app.command`: deterministic Intel app build + resource bundling
+- `build_back_to_ussr_app.command`: deterministic universal app build + resource bundling
 - `scripts/live_subscription_check.py`: live endpoint sanity checks
 - `scripts/run_tests.sh`: local test entrypoint
 - `tests/run_unit_tests.py`: parser/decode unit tests
@@ -41,6 +41,7 @@ Stored in user Application Support:
 - audio mute + last-play metadata
 
 ## Compatibility Target
-- Build target: `x86_64-apple-macos11.0`
-- Intended hardware: Intel MacBook class devices
-- Tested scenario: macOS Big Sur 11.7.x
+- App binary: universal `x86_64 + arm64`
+- Bundled `sing-box`: universal `x86_64 + arm64`
+- Minimum OS target: macOS 11.0
+- Tested scenario: macOS Big Sur 11.7.x and Apple Silicon host build environment

@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![macOS](https://img.shields.io/badge/macOS-11%2B-lightgrey)](https://github.com/danilagoleen/back_to_ussr)
 
-Лёгкий menu-bar VPN-клиент для старых Mac (Intel, macOS Big Sur 11.x+).
+Лёгкий menu-bar VPN-клиент для Mac (Intel и Apple Silicon, macOS Big Sur 11.x+).
 
 Решает замкнутый круг:
 - без VPN не открыть интернет;
@@ -41,9 +41,9 @@
 
 ## Compatibility
 - Intel Mac: работает нативно (`x86_64`).
-- Apple Silicon (M1/M2/M3/M4): запускается через Rosetta 2.
-- Текущая сборка ориентирована на максимальную совместимость (macOS 11+).
-- План: выпуск universal-сборки (`x86_64 + arm64`) в следующих релизах.
+- Apple Silicon (M1/M2/M3/M4): работает нативно (`arm64`).
+- Текущая сборка universal: `x86_64 + arm64`.
+- Минимальная версия macOS: 11+.
 
 ## Совместимость подписок
 Протестировано:
@@ -65,8 +65,8 @@
 
 ## Install
 1. Open [Releases](https://github.com/danilagoleen/back_to_ussr/releases)
-2. Download `BACK_TO_USSR.app.zip`
-3. Move `BACK_TO_USSR.app` to `/Applications`
+2. Download `BACK_TO_USSR.dmg` or `BACK_TO_USSR.app.zip`
+3. Open the DMG or move `BACK_TO_USSR.app` to `/Applications`
 4. If macOS blocks launch:
    ```bash
    xattr -cr /Applications/BACK_TO_USSR.app
@@ -84,6 +84,7 @@ Provider guide (Liberty VPN, VLESS on macOS):
 Output:
 - `dist/BACK_TO_USSR.app`
 - `dist/BACK_TO_USSR.app.zip`
+- `dist/BACK_TO_USSR.dmg`
 
 ## Tests
 ```bash
@@ -97,7 +98,7 @@ SUBSCRIPTION_URLS="https://example.com/sub1,https://example.com/sub2" ./scripts/
 
 ## Architecture (Short)
 - `Swift + AppKit` menu-bar app (`LSUIElement`)
-- bundled `sing-box` (`x86_64`) inside app resources
+- bundled universal `sing-box` (`x86_64 + arm64`) inside app resources
 - runtime config generation from parsed VLESS nodes
 - SOCKS validation with `curl`
 - periodic monitor for reconnect logic

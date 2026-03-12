@@ -3,3 +3,9 @@ build/
 dist/
 *.app
 *.zip
+.build/
+.clang-module-cache/
+.codex-home/
+.swift-module-cache/
+.swiftpm-cache/
+*.dmg

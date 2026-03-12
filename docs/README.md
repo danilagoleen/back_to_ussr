@@ -28,6 +28,7 @@ Menu-bar VPN app for Intel macOS 11+.
 Output:
 - `/Users/danilagulin/Documents/VETKA_Project/vetka_live_03/tools/back_to_ussr_app/dist/BACK_TO_USSR.app`
 - `/Users/danilagulin/Documents/VETKA_Project/vetka_live_03/tools/back_to_ussr_app/dist/BACK_TO_USSR.app.zip`
+- `/Users/danilagulin/Documents/VETKA_Project/vetka_live_03/tools/back_to_ussr_app/dist/BACK_TO_USSR.dmg`
 
 ## Use
 1. Launch app.
