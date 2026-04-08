@@ -109,3 +109,35 @@ It was built from a real lockout case (no internet -> no VPN install -> no inter
 
 ## License
 MIT. See [LICENSE](LICENSE).
+
+---
+
+## External Dependencies
+
+### Required
+- **Xcode 13+** — for building
+- **Swift 5.9+** — language
+
+### Build Tools
+```bash
+# Install Xcode from App Store or:
+xcode-select --install
+```
+
+### Runtime Dependencies (Bundled)
+- **sing-box** — VPN core (bundled inside app as universal binary)
+- **curl** — for SOCKS validation (system provided)
+
+### Optional
+- **Homebrew** — for dependency management (`brew install wget`)
+
+### System Requirements
+- macOS 11+ (Big Sur)
+- Tested on: Intel (x86_64) and Apple Silicon (arm64)
+
+### Build
+```bash
+./build_back_to_ussr_app.command
+# Or manually:
+xcodebuild -scheme back_to_ussr -configuration Release
+```
